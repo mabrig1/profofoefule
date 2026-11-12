@@ -1,0 +1,26 @@
+# Save this file as wrangler.toml AFTER creating the Cloudflare D1 database and R2 bucket.
+# Replace the database_id and set the required secure vars via Cloudflare dashboard / Wrangler.
+name = "profofoefule-portfolio"
+main = "worker/index.js"
+compatibility_date = "2026-10-01"
+compatibility_flags = []
+
+[assets]
+directory = "./site"
+binding = "ASSETS"
+# Only the ./site directory is published. Source code and migrations remain private.
+
+[[d1_databases]]
+binding = "DB"
+database_name = "profofoefule-books"
+database_id = "REPLACE_WITH_REAL_CLOUDFLARE_D1_DATABASE_ID"
+migrations_dir = "migrations"
+
+[[r2_buckets]]
+binding = "BOOK_FILES"
+bucket_name = "profofoefule-book-files"
+
+# Add environment variables on the Cloudflare Worker (not committed to git):
+# CF_ACCESS_TEAM_DOMAIN = your-team.cloudflareaccess.com
+# CF_ACCESS_AUD = Cloudflare Access application AUD tag
+# ADMIN_EMAILS = comma-separated emails of approved publishers

@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /admin.html
+Disallow: /api/admin/
+Sitemap: https://profofoefule.online/sitemap.xml
