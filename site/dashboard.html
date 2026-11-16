@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Professor's Dashboard | Prof. S. I. Ofoefule</title>
+<link rel="icon" href="assets/logo.svg"><link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/dashboard.css">
+</head><body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="topline"><div class="container top-inner"><span>PROFESSOR'S PRIVATE DASHBOARD</span><span>PROFILE · BOOKS · RESEARCH</span></div></div>
+<header class="site-header"><div class="nav container">
+<a class="brand" href="index.html"><span class="brand-mark">SO<span class="brand-star">✳</span></span><span class="brand-copy"><b>PROF. S. I. OFOEFULE</b><small>CONTENT MANAGEMENT</small></span></a>
+<a class="btn btn-outline" href="profile.html" target="_blank" rel="noopener">View public profile ↗</a>
+</div></header>
+<main id="main" class="dashboard-shell container">
+<div class="dashboard-top"><div><span class="section-kicker">WELCOME, PROFESSOR</span><h1>Manage your <em>academic legacy.</em></h1><p>Edit the biography, add scholarly articles and manage books without editing website code.</p></div>
+<div class="dashboard-status" id="connectionStatus" role="status" aria-live="polite">Checking secure publishing access…</div></div>
+<nav class="dashboard-tabs" aria-label="Dashboard sections">
+<button type="button" class="dash-tab active" data-tab="profile" aria-selected="true">My profile</button>
+<button type="button" class="dash-tab" data-tab="books" aria-selected="false">Books & chapters</button>
+<button type="button" class="dash-tab" data-tab="articles" aria-selected="false">Research articles</button></nav>
+
+<section id="tab-profile" class="dash-panel" aria-label="Edit academic profile">
+<div class="panel-heading"><div><h2>Academic biography</h2><p>Update any field and choose Save. Your public profile is updated immediately when cloud publishing is configured.</p></div><a class="text-link" href="profile.html" target="_blank" rel="noopener">Preview ↗</a></div>
+<form id="profileForm">
+<div class="dash-field"><label for="p-biography">Professional biography</label><textarea id="p-biography" name="biography" maxlength="3500" rows="5" required></textarea></div>
+<div class="dash-field"><label for="p-career">Career history</label><textarea id="p-career" name="career" maxlength="2500" rows="4"></textarea></div>
+<div class="dash-field"><label for="p-leadership">University leadership</label><textarea id="p-leadership" name="leadership" maxlength="3500" rows="4"></textarea></div>
+<div class="dash-field"><label for="p-service">Institutional service</label><textarea id="p-service" name="service" maxlength="2000" rows="3"></textarea></div>
+<div class="dash-field"><label for="p-administrative_positions">Administrative positions <small>One position per line</small></label><textarea id="p-administrative_positions" name="administrative_positions" maxlength="3000" rows="5"></textarea></div>
+<div class="dash-field"><label for="p-research">Research interests</label><textarea id="p-research" name="research" maxlength="3500" rows="4"></textarea></div>
+<div class="dash-field"><label for="p-research_outputs">Research and supervision highlights</label><textarea id="p-research_outputs" name="research_outputs" maxlength="2000" rows="3"></textarea></div>
+<div class="dash-field"><label for="p-mentorship">Academic mentorship</label><textarea id="p-mentorship" name="mentorship" maxlength="2000" rows="3"></textarea></div>
+<div class="dash-field"><label for="p-affiliations">Professional fellowships and honours <small>One item per line</small></label><textarea id="p-affiliations" name="affiliations" maxlength="3500" rows="6"></textarea></div>
+<div class="dash-actions"><button type="submit" class="btn btn-dark" data-write>Save profile changes ↗</button><span id="profileMessage" role="status" aria-live="polite"></span></div>
+</form></section>
+
+<section id="tab-books" class="dash-panel hidden" aria-label="Manage books">
+<div class="panel-heading"><div><h2>Books and book chapters</h2><p>Create a listing, upload a cover or licensed PDF, then choose Draft or Published.</p></div><a class="text-link" href="books.html" target="_blank" rel="noopener">Open library ↗</a></div>
+<div class="dash-columns"><div class="dash-list-panel"><h3>My books</h3><button class="btn btn-outline" type="button" id="newBook" data-write>+ Add new book</button><div id="bookEntries" class="dash-entry-list">Loading…</div></div>
+<form id="bookForm"><input type="hidden" name="id">
+<div class="dash-field"><label for="b-title">Book title *</label><input id="b-title" name="title" required maxlength="220"></div>
+<div class="dash-row"><div class="dash-field"><label for="b-author">Author(s) *</label><input id="b-author" name="author" required maxlength="300" value="Sabinus Ifeanyi Ofoefule"></div><div class="dash-field"><label for="b-type">Type</label><select id="b-type" name="type"><option value="book">Book</option><option value="chapter">Book chapter</option></select></div></div>
+<div class="dash-field"><label for="b-summary">Description *</label><textarea id="b-summary" name="summary" rows="4" required maxlength="6000"></textarea></div>
+<div class="dash-row"><div class="dash-field"><label for="b-year">Year</label><input id="b-year" name="year" type="number" min="1900" max="2100"></div><div class="dash-field"><label for="b-publisher">Publisher *</label><input id="b-publisher" name="publisher" maxlength="200"></div></div>
+<div class="dash-row"><div class="dash-field"><label for="b-isbn">ISBN</label><input id="b-isbn" name="isbn" maxlength="45"></div><div class="dash-field"><label for="b-edition">Edition</label><input id="b-edition" name="edition" maxlength="85"></div></div>
+<div class="dash-row"><div class="dash-field"><label for="b-format">Format</label><select id="b-format" name="format"><option>Print</option><option>eBook (PDF)</option><option>Print + eBook</option><option>Book chapter</option></select></div><div class="dash-field"><label for="b-category">Subject</label><input id="b-category" name="category" maxlength="100"></div></div>
+<div class="dash-row"><div class="dash-field"><label for="b-status">Visibility</label><select id="b-status" name="status"><option value="draft">Draft · not public</option><option value="published">Published · public</option></select></div><div class="dash-field"><label for="b-access">Reader access</label><select id="b-access" name="access"><option value="inquiry">Ask about availability</option><option value="external">External purchase</option><option value="free">Authorized free PDF</option></select></div></div>
+<div class="dash-field"><label for="b-license">PDF hosting permission</label><select id="b-license" name="license"><option value="metadata">Metadata only · no PDF hosting</option><option value="authorized">I confirm permission to host PDFs</option></select></div>
+<div class="dash-field"><label for="b-external_url">Bookstore URL</label><input id="b-external_url" name="external_url" type="url"></div>
+<div class="dash-field"><label for="b-cover">Cover image <small>JPG, PNG or WebP · 8 MB maximum</small></label><input id="b-cover" name="coverFile" type="file" accept="image/jpeg,image/png,image/webp"></div>
+<div class="dash-row"><div class="dash-field"><label for="b-sample">Sample PDF <small>40 MB maximum</small></label><input id="b-sample" name="sampleFile" type="file" accept="application/pdf"></div><div class="dash-field"><label for="b-full">Full licensed PDF <small>40 MB maximum</small></label><input id="b-full" name="fullFile" type="file" accept="application/pdf"></div></div>
+<div class="dash-actions"><button type="submit" class="btn btn-dark" data-write>Save book ↗</button><button id="deleteBook" type="button" class="btn btn-outline hidden" data-write>Delete</button><span id="bookMessage" role="status" aria-live="polite"></span></div></form></div>
+</section>
+
+<section id="tab-articles" class="dash-panel hidden" aria-label="Manage articles">
+<div class="panel-heading"><div><h2>Research articles</h2><p>Add an article using its DOI or publisher link. A PDF can be uploaded when distribution rights permit.</p></div><a class="text-link" href="publications.html" target="_blank" rel="noopener">View publications ↗</a></div>
+<div class="dash-columns"><div class="dash-list-panel"><h3>My new articles</h3><button type="button" class="btn btn-outline" id="newArticle" data-write>+ Add article</button><div id="articleEntries" class="dash-entry-list">Loading…</div></div>
+<form id="articleForm"><input type="hidden" name="id">
+<div class="dash-field"><label for="a-title">Article title *</label><input id="a-title" name="title" required maxlength="350"></div>
+<div class="dash-field"><label for="a-authors">Authors *</label><input id="a-authors" name="authors" required maxlength="350" value="Sabinus Ifeanyi Ofoefule"></div>
+<div class="dash-row"><div class="dash-field"><label for="a-journal">Journal / venue</label><input id="a-journal" name="journal" maxlength="250"></div><div class="dash-field"><label for="a-year">Publication year</label><input id="a-year" name="year" type="number" min="1900" max="2100"></div></div>
+<div class="dash-field"><label for="a-abstract">Abstract or summary</label><textarea id="a-abstract" name="abstract" maxlength="7000" rows="5"></textarea></div>
+<div class="dash-field"><label for="a-doi">DOI <small>For example: 10.1234/example</small></label><input id="a-doi" name="doi" maxlength="200"></div>
+<div class="dash-field"><label for="a-link_url">Publisher / article URL</label><input id="a-link_url" name="link_url" type="url"></div>
+<div class="dash-row"><div class="dash-field"><label for="a-status">Visibility</label><select id="a-status" name="status"><option value="draft">Draft · not public</option><option value="published">Published · public</option></select></div><div class="dash-field"><label for="a-license">PDF permission</label><select id="a-license" name="license"><option value="metadata">Link only · no PDF hosting</option><option value="authorized">I confirm permission to host PDF</option></select></div></div>
+<div class="dash-field"><label for="a-pdf">Article PDF <small>Optional · PDF · 40 MB maximum · permission required</small></label><input id="a-pdf" name="articleFile" type="file" accept="application/pdf"></div>
+<div class="dash-actions"><button type="submit" class="btn btn-dark" data-write>Save article ↗</button><button id="deleteArticle" type="button" class="btn btn-outline hidden" data-write>Delete</button><span id="articleMessage" role="status" aria-live="polite"></span></div></form></div>
+</section>
+<div class="dashboard-footer">Only an approved Cloudflare Access account can save content. Publishing an article or book does not grant copyright permission to distribute its full text.</div>
+</main>
+<script src="assets/dashboard.js" defer></script>
+</body></html>
