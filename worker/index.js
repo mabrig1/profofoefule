@@ -1,3 +1,4 @@
+import { editorAPI } from "./editor-api.js";
 /**
  * Optional Cloudflare Worker backend for Professor Ofoefule's portfolio.
  * Requires Cloudflare Access, D1 and R2 to be configured. Fail-closed by design.
@@ -53,16 +54,22 @@ const columns=['id','slug','title','author','summary','status','type','license',
 async function listBooks(env,isAdmin=false){let {results}=await env.DB.prepare(`SELECT * FROM books ${isAdmin?'':"WHERE status='published'"} ORDER BY year DESC, updated_at DESC`).all();return results.map(x=>isAdmin?x:publicBook(x));}
 async function addBook(env,data){const b=normalize(data),id=crypto.randomUUID(),now=new Date().toISOString();const record={id,...b,updated_at:now};await env.DB.prepare(`INSERT INTO books (${columns.join(',')}) VALUES (${columns.map(()=>'?').join(',')})`).bind(...columns.map(k=>record[k]??null)).run();return record;}
 async function updateBook(env,id,data){const exists=await env.DB.prepare('SELECT * FROM books WHERE id=?').bind(id).first();if(!exists)fail(404,'Book entry not found.');const b=normalize(data),now=new Date().toISOString();await env.DB.prepare(`UPDATE books SET ${columns.filter(k=>k!=='id').map(k=>`${k}=?`).join(',')} WHERE id=?`).bind(...columns.filter(k=>k!=='id').map(k=>k==='updated_at'?now:b[k]??null),id).run();return{id,...b,updated_at:now};}
-async function uploadFile(req,env){if(!env.BOOK_FILES)fail(503,'File storage not configured.');let form;try{form=await req.formData()}catch{fail(400,'Expected multipart file upload.')}const file=form.get('file'),kind=form.get('kind');if(!(file instanceof File))fail(400,'Choose a file to upload.');if(!['cover','sample','full'].includes(kind))fail(400,'Invalid file type.');const isCover=kind==='cover',max=isCover?8*1024*1024:40*1024*1024;if(file.size>max)fail(413,'File exceeds size limit.');if(file.size<8)fail(400,'File too small.');const mime=String(file.type||'').toLowerCase();let ext;if(isCover){ext={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'}[mime];if(!ext)fail(415,'Cover must be JPEG, PNG or WebP.');}else{if(mime!=='application/pdf')fail(415,'Only PDF files are supported for book editions.');ext='pdf';}
+async function uploadFile(req,env){if(!env.BOOK_FILES)fail(503,'File storage not configured.');let form;try{form=await req.formData()}catch{fail(400,'Expected multipart file upload.')}const file=form.get('file'),kind=form.get('kind');if(!(file instanceof File))fail(400,'Choose a file to upload.');if(!['cover','sample','full','article'].includes(kind))fail(400,'Invalid file type.');const isCover=kind==='cover',max=isCover?8*1024*1024:40*1024*1024;if(file.size>max)fail(413,'File exceeds size limit.');if(file.size<8)fail(400,'File too small.');const mime=String(file.type||'').toLowerCase();let ext;if(isCover){ext={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'}[mime];if(!ext)fail(415,'Cover must be JPEG, PNG or WebP.');}else{if(mime!=='application/pdf')fail(415,'Only PDF files are supported for book editions.');ext='pdf';}
  const magic=new Uint8Array(await file.slice(0,16).arrayBuffer());const str=Array.from(magic).map(x=>String.fromCharCode(x)).join('');
  const valid=isCover?ext==='jpg'?magic[0]===0xff&&magic[1]===0xd8&&magic[2]===0xff:ext==='png'?str.startsWith('\x89PNG\r\n\x1a\n'):str.startsWith('RIFF')&&str.slice(8,12)==='WEBP':str.startsWith('%PDF-');if(!valid)fail(415,'File signature does not match its declared format.');
  const key=`files/${crypto.randomUUID()}.${ext}`;await env.BOOK_FILES.put(key,file.stream(),{httpMetadata:{contentType:mime},customMetadata:{kind}});return {url:`/api/media/${key}`,key,bytes:file.size};
 }
 async function media(req,env,path){ensureDB(env);if(!env.BOOK_FILES)fail(503,'File storage not configured.');const key=path.slice('/api/media/'.length);if(!/^files\/[0-9a-f-]{36}\.(pdf|png|jpg|webp)$/.test(key))return err(404,'File not found.');const ref=`/api/media/${key}`;
- const book=await env.DB.prepare('SELECT id FROM books WHERE status=\'published\' AND (cover_url=? OR (license=\'authorized\' AND sample_url=?) OR (license=\'authorized\' AND access=\'free\' AND full_url=?)) LIMIT 1').bind(ref,ref,ref).first();if(!book)return err(404,'File not published.');
+ const book=await env.DB.prepare('SELECT id FROM books WHERE status=\'published\' AND (cover_url=? OR (license=\'authorized\' AND sample_url=?) OR (license=\'authorized\' AND access=\'free\' AND full_url=?)) LIMIT 1').bind(ref,ref,ref).first();
+ const article=book?null:await env.DB.prepare("SELECT id FROM articles WHERE status='published' AND license='authorized' AND pdf_url=? LIMIT 1").bind(ref).first();if(!book&&!article)return err(404,'File not published.');
  const obj=await env.BOOK_FILES.get(key);if(!obj)return err(404,'File unavailable.');const headers=new Headers();obj.writeHttpMetadata(headers);headers.set('etag',obj.httpEtag);headers.set('x-content-type-options','nosniff');headers.set('content-security-policy',"default-src 'none'; sandbox");headers.set('cache-control','public, max-age=3600');headers.set('content-disposition',key.endsWith('.pdf')?'inline':'inline');return new Response(obj.body,{headers});}
 export default{async fetch(req,env,ctx){const url=new URL(req.url),path=url.pathname;try{
+ if(path==='/dashboard'||path==='/dashboard.html'||path==='/admin'||path==='/admin.html'){
+  await requireAdmin(req,env);
+  return env.ASSETS.fetch(req);
+ }
  if(!path.startsWith('/api/'))return env.ASSETS.fetch(req);
+ if(path==='/api/profile'||path==='/api/articles'||path==='/api/admin/session'||path==='/api/admin/profile'||path.startsWith('/api/admin/articles'))return editorAPI(req,env,path,requireAdmin);
  if(path==='/api/health'&&req.method==='GET')return json({status:'ok',service:'book-library'});
  if(!env.DB)return err(503,'Publishing database not connected.');
  if(path==='/api/books'&&req.method==='GET')return json(await listBooks(env));

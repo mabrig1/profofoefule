@@ -3,6 +3,13 @@
   "compatibility_date": "2026-11-15",
   "assets": {
     "directory": "./site",
-    "html_handling": "auto-trailing-slash"
-  }
+    "html_handling": "auto-trailing-slash",
+    "binding": "ASSETS",
+    "run_worker_first": [
+      "/api/*",
+      "/dashboard*",
+      "/admin*"
+    ]
+  },
+  "main": "./worker/index.js"
 }
