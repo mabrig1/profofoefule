@@ -1,10 +1,16 @@
 # Prof. Sabinus Ifeanyi Ofoefule — Portfolio & Book Publishing Site
 
-**Domain planned:** `profofoefule.online`  
-**Status:** Finished, locally tested starter website; **not deployed or connected to DNS**.  
+**Website:** `https://profofoefule.online` (Cloudflare Worker)  
+**Status:** Public portfolio deployed; protected self-service dashboard is available in this feature branch and requires Cloudflare Access, D1, and optional R2 bindings before live editing.  
 **Date:** 12 November 2026
 
 This is an original, lightweight, mobile-friendly academic portfolio and an extensible book publishing catalogue. All web pages are inside `site/`. No build tools are required for the public website.
+
+## Professor's self-service dashboard
+
+The private `/dashboard` interface lets an approved account update the academic biography, upload book covers or licensed PDFs, and publish research articles using DOIs, external links or authorized PDFs. The interface includes Draft/Published status and editable records. No public account registration or password is provided.
+
+**See [docs/PROFESSOR_DASHBOARD_SETUP.md](docs/PROFESSOR_DASHBOARD_SETUP.md) before activating.** These changes do not create D1/R2 resources, Access policies or secrets automatically. Public pages remain static and usable if the database is not configured.
 
 ## What is included
 
