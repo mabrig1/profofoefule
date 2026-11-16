@@ -1,0 +1,8 @@
+{
+  "name": "profofoefule",
+  "compatibility_date": "2026-11-15",
+  "assets": {
+    "directory": "./site",
+    "html_handling": "auto-trailing-slash"
+  }
+}
